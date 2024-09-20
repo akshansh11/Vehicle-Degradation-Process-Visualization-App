@@ -9,6 +9,7 @@ Original file is located at
 
 # Import necessary libraries
 import scipy
+# Import necessary libraries
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -75,33 +76,38 @@ X, Y = np.meshgrid(x, y)
 # Generate Z-values based on the selected degradation model
 Z_values = Z(X, Y)
 
-# Ensure there is a dynamic color range by setting vmin and vmax for the colormap
-vmin = np.min(Z_values)
-vmax = np.max(Z_values)
+# Debugging: Check if Z_values is constant
+if np.all(Z_values == Z_values[0, 0]):
+    st.error("The Z values are constant. Please adjust the input parameters or the Z function to generate variable values.")
+else:
+    # Ensure there is a dynamic color range by setting vmin and vmax for the colormap
+    vmin = np.min(Z_values)
+    vmax = np.max(Z_values)
 
-# Display the calculated values in Streamlit
-st.write(f"**Degradation Process: {process_type}**")
-st.write(f"Min value: {vmin:.2f}, Max value: {vmax:.2f}")
+    # Display the calculated values in Streamlit
+    st.write(f"**Degradation Process: {process_type}**")
+    st.write(f"Min value: {vmin:.2f}, Max value: {vmax:.2f}")
 
-# Plotting the degradation process using contour plot
-fig, ax = plt.subplots(figsize=(8, 6))
-contour = ax.contourf(X, Y, Z_values, 20, cmap=cm.plasma, vmin=vmin, vmax=vmax)
-fig.colorbar(contour, ax=ax)
-ax.set_title(f"{process_type} Degradation Model", fontsize=16)
-ax.set_xlabel('X-axis')
-ax.set_ylabel('Y-axis')
+    # Plotting the degradation process using contour plot
+    fig, ax = plt.subplots(figsize=(8, 6))
+    contour = ax.contourf(X, Y, Z_values, 20, cmap=cm.plasma, vmin=vmin, vmax=vmax)
+    fig.colorbar(contour, ax=ax)
+    ax.set_title(f"{process_type} Degradation Model", fontsize=16)
+    ax.set_xlabel('X-axis')
+    ax.set_ylabel('Y-axis')
 
-# Display the plot in Streamlit
-st.pyplot(fig)
+    # Display the plot in Streamlit
+    st.pyplot(fig)
 
-# High-resolution image download option
-st.sidebar.header("Export Options")
-dpi = st.sidebar.slider("DPI", 100, 600, 300)
-st.write(f"Download high-resolution image ({dpi} DPI)")
-if st.button('Download Image'):
-    fig.savefig("degradation_plot.png", dpi=dpi)
-    with open("degradation_plot.png", "rb") as file:
-        btn = st.download_button(label="Download Image", data=file, file_name="degradation_plot.png", mime="image/png")
+    # High-resolution image download option
+    st.sidebar.header("Export Options")
+    dpi = st.sidebar.slider("DPI", 100, 600, 300)
+    st.write(f"Download high-resolution image ({dpi} DPI)")
+    if st.button('Download Image'):
+        fig.savefig("degradation_plot.png", dpi=dpi)
+        with open("degradation_plot.png", "rb") as file:
+            btn = st.download_button(label="Download Image", data=file, file_name="degradation_plot.png", mime="image/png")
+
 
 
 
