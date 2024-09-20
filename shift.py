@@ -9,7 +9,6 @@ Original file is located at
 
 # Import necessary libraries
 import scipy
-# Import necessary libraries
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
@@ -76,9 +75,17 @@ X, Y = np.meshgrid(x, y)
 # Generate Z-values based on the selected degradation model
 Z_values = Z(X, Y)
 
+# Ensure there is a dynamic color range by setting vmin and vmax for the colormap
+vmin = np.min(Z_values)
+vmax = np.max(Z_values)
+
+# Display the calculated values in Streamlit
+st.write(f"**Degradation Process: {process_type}**")
+st.write(f"Min value: {vmin:.2f}, Max value: {vmax:.2f}")
+
 # Plotting the degradation process using contour plot
 fig, ax = plt.subplots(figsize=(8, 6))
-contour = ax.contourf(X, Y, Z_values, 20, cmap=cm.plasma)
+contour = ax.contourf(X, Y, Z_values, 20, cmap=cm.plasma, vmin=vmin, vmax=vmax)
 fig.colorbar(contour, ax=ax)
 ax.set_title(f"{process_type} Degradation Model", fontsize=16)
 ax.set_xlabel('X-axis')
@@ -95,4 +102,10 @@ if st.button('Download Image'):
     fig.savefig("degradation_plot.png", dpi=dpi)
     with open("degradation_plot.png", "rb") as file:
         btn = st.download_button(label="Download Image", data=file, file_name="degradation_plot.png", mime="image/png")
+
+
+
+
+
+
 
