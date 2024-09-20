@@ -8,7 +8,7 @@ Original file is located at
 """
 
 # Import necessary libraries
-pip install scipy
+
 import scipy
 import streamlit as st
 import numpy as np
